@@ -1,7 +1,7 @@
 # Get-DefenderStatus.psm1
 
 function Get-DefenderStatus {
-    $services = Get-Service -Name 'WinDefend', 'WdNisSvc'
+    $services = Get-Service *Defend*
     foreach ($service in $services) {
         Write-Output "$($service.Name) is $($service.Status)"
     }
@@ -9,13 +9,13 @@ function Get-DefenderStatus {
 
 function Update-DefenderSignatures {
     Write-Output "Updating Windows Defender signatures..."
-    Update-MpSignature
+    Update-MpSignature -Verbose
     Write-Output "Update complete."
 }
 
 function Start-DefenderQuickScan {
-    Write-Output "Starting quick scan..."
-    Start-MpScan -ScanType QuickScan
+    Write-Host "Starting quick scan..."
+    Start-MpScan -ScanType QuickScan -Verbose
     Write-Output "Quick scan complete."
 }
 
