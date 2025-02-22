@@ -2,7 +2,7 @@ function Get-WebText {
     param (
         [Parameter(Mandatory = $true)]
         [string]$Url
-    )
+    ) 
     if (-not $PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Url')) {
         $Url = Read-Host "Please enter the Web URL"
     }
@@ -18,6 +18,7 @@ function Get-WebText {
     # Display the text-only content
     $textOnlyContent
 }
+
 
 # Example usage
 Get-WebText -Url "https://www.example.com"
