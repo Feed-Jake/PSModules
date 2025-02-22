@@ -10,25 +10,26 @@
 The above command (with a url) will get you the text (HTML included) of a website.
 #>
 
-
-
 function Get-WebText {
+    [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [string]$Url
     ) 
-    if (-not $PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Url')) {
-        $Url = Read-Host "Please enter the Web URL"
+    process {
+        if (-not $PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Url')) {
+            $Url = Read-Host "Please enter the Web URL"
+        }
+        # Fetch the HTML content of the website
+        $response = Invoke-WebRequest -Uri $Url
+
+        # Extract the raw HTML content
+        $htmlContent = $response.Content
+
+        # Use regex to remove HTML tags
+        $textOnlyContent = [regex]::Replace($htmlContent, '<[^>]+>', ' ')
+
+        # Display the text-only content
+        $textOnlyContent
     }
-    # Fetch the HTML content of the website
-    $response = Invoke-WebRequest -Uri $Url
-
-    # Extract the raw HTML content
-    $htmlContent = $response.Content
-
-    # Use regex to remove HTML tags
-    $textOnlyContent = [regex]::Replace($htmlContent, '<[^>]+>', ' ')
-
-    # Display the text-only content
-    $textOnlyContent
 }
