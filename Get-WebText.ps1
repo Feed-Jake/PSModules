@@ -3,7 +3,9 @@ function Get-WebText {
         [Parameter(Mandatory = $true)]
         [string]$Url
     )
-
+    if (-not $PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Url')) {
+        $Url = Read-Host "Please enter the Web URL"
+    }
     # Fetch the HTML content of the website
     $response = Invoke-WebRequest -Uri $Url
 
