@@ -1,3 +1,24 @@
+<#
+.SYNOPSIS
+    Having fun with PowerShell by fetching specific commodity prices from a website.    
+.DESCRIPTION
+    This Module is intended to have a little fun with keeping close to the Agricultural scene with PowerShell. 
+    Trying to see what's going on in the market with a few commodities.
+.PARAMETER Commodity
+    The name of the commodity to fetch the price for. Valid values are: Coffee, LiveCattle, Wheat, Corn, Oil.
+.NOTES
+    We are fetching the data from the https://tradingeconomics.com/commodity/ website.
+    The website structure might change, so this script may need to be updated accordingly.
+.LINK
+    At thi smoment, there is no online help link for this module.
+.EXAMPLE
+    Get-CommodityPrice -Commodity Coffee
+    Get-CommodityPrice -Commodity Wheat
+    Get-CommodityPrice -Commodity Oil
+    These examples will fetch the current price of Coffee, Wheat, and Oil, respectively.
+#>
+
+
 function Get-CommodityPrice {
     param (
         [string]$Commodity
