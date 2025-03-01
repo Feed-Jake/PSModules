@@ -22,7 +22,7 @@ function Get-CommodityPrice {
         [string]$Commodity
     )
 
-    # Define the commodity URLs
+    # Define commodity URLs
     $commodityUrls = @{
         "Coffee"      = "https://tradingeconomics.com/commodity/coffee"
         "LiveCattle"  = "https://tradingeconomics.com/commodity/cattle"
@@ -31,7 +31,7 @@ function Get-CommodityPrice {
         "Oil"         = "https://tradingeconomics.com/commodity/crude-oil"
     }
 
-    # Validate user input
+    # Validate input
     if (-not $commodityUrls.ContainsKey($Commodity)) {
         Write-Error "Invalid commodity name. Use: Coffee, LiveCattle, Wheat, Corn, Oil."
         return
@@ -40,12 +40,12 @@ function Get-CommodityPrice {
     $url = $commodityUrls[$Commodity]
 
     try {
-        # Fetch the webpage
+        # Fetch the webpage content
         $response = Invoke-WebRequest -Uri $url -UseBasicParsing
         $html = $response.Content
 
-        # Extract the first numeric value that looks like a price
-        if ($html -match '(\d{1,5},?\d*\.\d{1,2})') {
+        # Extract the first numeric value that looks like the current price
+        if ($html -match '<span.*?>\s*([\d,]+\.\d{1,2})\s*</span>') {
             $currentPrice = $matches[1] -replace ",", ""  # Remove commas
         }
         else {
@@ -53,13 +53,14 @@ function Get-CommodityPrice {
             return
         }
 
-        # Extract price change (+/- value)
+        # Extract the price change and percentage change
         if ($html -match '([-+]?\d*\.\d{1,2})\s*\(([-+]?\d*\.\d{1,2})%\)') {
             $priceChange = $matches[1]
             $percentChange = $matches[2]
         }
         else {
-            Write-Error "Unable to extract price change for $Commodity."
+            Write-Error "Unable to extract price change for $Commodity. Raw HTML saved to Debug_Commodity.txt"
+            $html | Out-File -FilePath "Debug_Commodity.txt"  # Save HTML for troubleshooting
             return
         }
 
@@ -70,6 +71,5 @@ function Get-CommodityPrice {
     }
 }
 
-# Example Usage:
-Get-CommodityPrice -Commodity Oil
-Get-CommodityPrice -Commodity Wheat
+# Test Example
+#Get-CommodityPrice -Commodity Corn
