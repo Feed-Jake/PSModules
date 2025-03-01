@@ -17,8 +17,6 @@
     Get-CommodityPrice -Commodity Oil
     These examples will fetch the current price of Coffee, Wheat, and Oil, respectively.
 #>
-
-
 function Get-CommodityPrice {
     param (
         [string]$Commodity
@@ -46,14 +44,26 @@ function Get-CommodityPrice {
         $response = Invoke-WebRequest -Uri $url -UseBasicParsing
         $html = $response.Content
 
-        # Extract the first numeric value that looks like a price (e.g., 69.76)
+        # Extract the first numeric value that looks like a price
         if ($html -match '(\d{1,5},?\d*\.\d{1,2})') {
-            $price = $matches[1] -replace ",", ""  # Remove commas if they exist
-            return "$Commodity Price: $price USD"
+            $currentPrice = $matches[1] -replace ",", ""  # Remove commas
         }
         else {
-            Write-Error "Unable to extract price for $Commodity. The webpage structure might have changed."
+            Write-Error "Unable to extract price for $Commodity."
+            return
         }
+
+        # Extract price change (+/- value)
+        if ($html -match '([-+]?\d*\.\d{1,2})\s*\(([-+]?\d*\.\d{1,2})%\)') {
+            $priceChange = $matches[1]
+            $percentChange = $matches[2]
+        }
+        else {
+            Write-Error "Unable to extract price change for $Commodity."
+            return
+        }
+
+        return "$Commodity Price: $currentPrice USD | Change: $priceChange ($percentChange%)"
     }
     catch {
         Write-Error "Error fetching data: $_"
@@ -61,6 +71,5 @@ function Get-CommodityPrice {
 }
 
 # Example Usage:
-Get-CommodityPrice -Commodity Coffee
-Get-CommodityPrice -Commodity Wheat
 Get-CommodityPrice -Commodity Oil
+Get-CommodityPrice -Commodity Wheat
