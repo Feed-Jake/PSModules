@@ -1,3 +1,24 @@
+<#
+.SYNOPSIS
+    A quick probe into the Stock quotes using Alpha Vantage Free API.
+.DESCRIPTION
+    Using this PowerShell Module is a quick way to keep track of many stock quotes using the Alpha Vantage API.
+    The function Get-Stocks retrieves the latest stock data for a given symbol (e.g., WTI, VMW) from Alpha Vantage.
+    It will display the most recent data, including the opening, high, low, and closing prices. With a color code,
+    it will highlight whether the closing price is higher (in green), lower (in red), or equal (in yellow) to the opening price.
+.NOTES
+    Alpha Vantage is pleased to provide free stock API service covering the majority of our datasets for up to 25 requests per day
+.LINK
+    https://www.alphavantage.co/support/#support
+.EXAMPLE
+    Get-Stocks -Id VMW -Verbose
+    This command will reach out and get the most recent data for the stock symbol VMW (VMWare) from Alpha Vantage.
+.EXAMPLE 
+    Get-Stocks -Id WTI -Verbose
+    This command will reach out and get the most recent data for the stock symbol WTI (West Texas Intermediate) from Alpha Vantage.   
+#>
+
+# Define the function Get-Stocks
 function Get-Stocks {
     param (
         [Parameter(Mandatory=$true)]
@@ -60,3 +81,4 @@ if ($PSCmdlet.MyInvocation.InvocationName -eq 'Get-Stocks') {
     )
     Get-Stocks -Id $Id
 }
+
